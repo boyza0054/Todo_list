@@ -10,7 +10,9 @@ class App extends Component {
     
     this.state = {
       items: [],
-      text: ""
+      text: "",
+      chkall:false
+
     };
     
     this.handleTextChange = this.handleTextChange.bind(this);
@@ -66,13 +68,39 @@ class App extends Component {
   }
 
   Chackall(){
-    this.setState({
-      chkall: true
+    if(this.state.chkall === true){
+      this.setState({
+        chkall: false
+      });
+    }else{
+      this.setState({
+        chkall: true
+      });
+    }
+    
+    var updatedItems = this.state.items.map(item => {
+      console.log(this.state)
+      if(this.state.chkall == true){
+        item.done = false;
+
+      }else{
+        item.done = true;
+      }
+       
+      
+      return item;
     });
+    
+    // State Updates are Merged
+    this.setState({
+      items: [].concat(updatedItems)
+    });
+    
   }
 
   
   render() {
+    
     return (
       <div>
       <header className="App-header" style={{marginBottom : "20px"}}>
@@ -95,7 +123,7 @@ class App extends Component {
 
         <div className="row dataContent">
           <div className="col-md-8 col-md-offset-2">
-            <TodoList items={this.state.items} onItemCompleted={this.markItemCompleted} onDeleteItem={this.handleDeleteItem} />
+            <TodoList checkall = {this.state.chkall} items={this.state.items} onItemCompleted={this.markItemCompleted} onDeleteItem={this.handleDeleteItem} />
           </div>
         </div>
 

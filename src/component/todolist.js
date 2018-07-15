@@ -5,7 +5,7 @@ class TodoList extends Component {
       return (
         <div className="todolist">
           {this.props.items.map(item => (
-            <TodoItem key={item.id} id={item.id} text={item.text} completed={item.done} onItemCompleted={this.props.onItemCompleted} onDeleteItem={this.props.onDeleteItem} />
+            <TodoItem checkall={this.props.checkall} key={item.id} id={item.id} text={item.text} completed={item.done} onItemCompleted={this.props.onItemCompleted} onDeleteItem={this.props.onDeleteItem} />
           ))}
         </div>
       );
@@ -15,11 +15,11 @@ class TodoList extends Component {
   class TodoItem extends Component {
     constructor(props) {
       super(props);
-
+        console.log(this.props)
       this.state = {
         Isclick: false,
         text : this.props.text,
-        id : this.props.id
+        id : this.props.id,
       };
 
       this.markCompleted = this.markCompleted.bind(this);
@@ -51,7 +51,7 @@ class TodoList extends Component {
         Isclick: false
       });
 
-      console.log(this.state.Isclick)
+    //   console.log(this.state.Isclick)
     }
 
     handleUpdateItem(event){
@@ -69,15 +69,15 @@ class TodoList extends Component {
 
       
     }
-    // Highlight newly added item for several seconds.
+    
     componentDidMount() {
       if (this._listItem) {
-        // 1. Add highlight class.
+        
         this._listItem.classList.add("highlight");
   
-        // 2. Set timeout.
+        
         setTimeout((listItem) => {
-          // 3. Remove highlight class.
+         
           listItem.classList.remove("highlight");
         }, 500, this._listItem);
       }
@@ -89,7 +89,7 @@ class TodoList extends Component {
       return (
         <div id="box" className={itemClass} ref={li => this._listItem = li }>
           <div className="col-md-1">
-            <input type="checkbox" className="form-check-input" onChange={this.markCompleted} /> 
+            <input type="checkbox" className="form-check-input" onChange={this.markCompleted} checked={this.props.completed} /> 
           </div>
         
           <div className="col-md-10">
