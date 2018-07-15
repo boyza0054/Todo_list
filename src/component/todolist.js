@@ -15,7 +15,7 @@ class TodoList extends Component {
   class TodoItem extends Component {
     constructor(props) {
       super(props);
-        console.log(this.props)
+        
       this.state = {
         Isclick: false,
         text : this.props.text,
@@ -33,7 +33,10 @@ class TodoList extends Component {
       this.props.onItemCompleted(this.props.id);
     }
     deleteItem(event) {
-      this.props.onDeleteItem(this.props.id);
+        if (window.confirm('Are you sure to delete ?')) { 
+            this.props.onDeleteItem(this.props.id);
+          }
+      
     }
 
     handinfo(event){
@@ -70,20 +73,7 @@ class TodoList extends Component {
       
     }
     
-    componentDidMount() {
-      if (this._listItem) {
-        
-        this._listItem.classList.add("highlight");
-  
-        
-        setTimeout((listItem) => {
-         
-          listItem.classList.remove("highlight");
-        }, 500, this._listItem);
-      }
-
-
-    }
+    
     render() {
       var itemClass = "row form-check todoitem " + (this.props.completed ? "done" : "undone");
       return (
@@ -95,7 +85,7 @@ class TodoList extends Component {
           <div className="col-md-10">
             
               
-              {this.state.Isclick == true ? 
+              {this.state.Isclick === true ? 
                 
                  <form className="row" onSubmit={this.handleUpdateItem}>
                     <div className="col-md-8">

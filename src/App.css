@@ -72,3 +72,11 @@ li{
 #text_todo{
   cursor: pointer;
 }
+.deletelist{
+  padding-top: 8px;
+  width: 90px;
+  cursor: pointer;
+}
+.deletelist:hover{
+  color:red;
+}

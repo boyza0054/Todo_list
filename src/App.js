@@ -20,6 +20,7 @@ class App extends Component {
     this.markItemCompleted = this.markItemCompleted.bind(this);
     this.handleDeleteItem = this.handleDeleteItem.bind(this);
     this.Chackall = this.Chackall.bind(this);
+    this.Delete_list = this.Delete_list.bind(this);
   }
   handleTextChange(event) {
     this.setState({
@@ -51,7 +52,7 @@ class App extends Component {
       return item;
     });
     
-    // State Updates are Merged
+    
     this.setState({
       items: [].concat(updatedItems)
     });
@@ -78,9 +79,9 @@ class App extends Component {
       });
     }
     
-    var updatedItems = this.state.items.map(item => {
-      console.log(this.state)
-      if(this.state.chkall == true){
+    var CheckItems = this.state.items.map(item => {
+      // console.log(this.state)
+      if(this.state.chkall === true){
         item.done = false;
 
       }else{
@@ -91,12 +92,34 @@ class App extends Component {
       return item;
     });
     
-    // State Updates are Merged
+    
     this.setState({
-      items: [].concat(updatedItems)
+      items: [].concat(CheckItems)
     });
     
   }
+
+  Delete_list(){
+   if(this.state.items.length === 0){
+    alert('No row selected.')
+   }else{
+    var list_Items = this.state.items.filter(item => item.done === false);
+    
+    if(list_Items.length !== this.state.items.length){
+      
+      if (window.confirm('Are you sure to delete ?')) { 
+        this.setState({
+          items: [].concat(list_Items)
+        });
+      }
+      
+    }else{
+      alert('No row selected.')
+    }
+   }
+    
+  }
+  
 
   
   render() {
@@ -113,7 +136,12 @@ class App extends Component {
             <input type="checkbox" className="form-check-input" onClick={this.Chackall}/> 
             <span className="checkall">Check all</span>
           </div>
-          <div className="col-md-4 col-md-offset-1">
+          <div className="col-md-1 deletelist" onClick={this.Delete_list}>
+            
+                <i className="fa fa-trash-o" aria-hidden="true"> Delete</i>
+           
+          </div>
+          <div className="col-md-4">
             <input type="text" className="form-control" onChange={this.handleTextChange} value={this.state.text} placeholder="กรุณากรอกรายการ"/>
           </div>
           <div className="col-md-2">
