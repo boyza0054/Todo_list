@@ -22,50 +22,47 @@ class App extends Component {
     this.Chackall = this.Chackall.bind(this);
     this.Delete_list = this.Delete_list.bind(this);
   }
+
   handleTextChange(event) {
     this.setState({
       text: event.target.value
     });
   }
+
   handleAddItem(event) {
     event.preventDefault();
-    
+
     var newItem = {
       id: Date.now(),
       text: this.state.text,
       done: false
     };
-    
-    
-
+  
     this.setState((prevState) => ({
       items: prevState.items.concat(newItem),
       text: ""
     }));
   }
+
   markItemCompleted(itemId) {
     // console.log(this.state,itemId)
     var updatedItems = this.state.items.map(item => {
       if (itemId === item.id)
         item.done = !item.done;
-      
       return item;
     });
-    
-    
-    this.setState({
-      items: [].concat(updatedItems)
-    });
-  }
-  handleDeleteItem(itemId) {
-    var updatedItems = this.state.items.filter(item => {
-      return item.id !== itemId;
-    });
-    
 
-    this.setState({
-      items: [].concat(updatedItems)
-    });
+    if(this.state.chkall === true){
+      this.setState({
+        items: [].concat(updatedItems),
+        chkall: false
+      }); 
+    }else{
+      this.setState({
+        items: [].concat(updatedItems)
+      });
+    }
+    
   }
 
   Chackall(){
@@ -83,20 +80,25 @@ class App extends Component {
       // console.log(this.state)
       if(this.state.chkall === true){
         item.done = false;
-
       }else{
         item.done = true;
-      }
-       
-      
+      }  
       return item;
     });
-    
-    
     this.setState({
       items: [].concat(CheckItems)
     });
+  }
+
+  handleDeleteItem(itemId) {
+    var updatedItems = this.state.items.filter(item => {
+      return item.id !== itemId;
+    });
     
+
+    this.setState({
+      items: [].concat(updatedItems)
+    });
   }
 
   Delete_list(){
@@ -107,7 +109,7 @@ class App extends Component {
     
     if(list_Items.length !== this.state.items.length){
       
-      if (window.confirm('Are you sure to delete ?')) { 
+      if (window.confirm('Are you sure you want to delete ?')) { 
         this.setState({
           items: [].concat(list_Items)
         });
@@ -119,9 +121,7 @@ class App extends Component {
    }
     
   }
-  
-
-  
+ 
   render() {
     
     return (
@@ -130,16 +130,13 @@ class App extends Component {
           <h3 className="apptitle">MY TO DO LIST</h3>
       </header>
       <div className="col-md-8 col-md-offset-2">
-        
         <form className="row">
            <div className="col-md-offset-2 col-md-2 nopaddingleft-right width_checkall">
-            <input type="checkbox" className="form-check-input" onClick={this.Chackall}/> 
+            <input type="checkbox" className="form-check-input" onClick={this.Chackall} checked={this.state.chkall === true}/> 
             <span className="checkall">Check all</span>
           </div>
           <div className="col-md-1 deletelist" onClick={this.Delete_list}>
-            
                 <i className="fa fa-trash-o" aria-hidden="true"> Delete</i>
-           
           </div>
           <div className="col-md-4">
             <input type="text" className="form-control" onChange={this.handleTextChange} value={this.state.text} placeholder="กรุณากรอกรายการ"/>
@@ -148,13 +145,11 @@ class App extends Component {
             <button className="btn btn-primary" onClick={this.handleAddItem} disabled={!this.state.text}>Add</button>
           </div>
         </form>
-
         <div className="row dataContent">
           <div className="col-md-8 col-md-offset-2">
-            <TodoList checkall = {this.state.chkall} items={this.state.items} onItemCompleted={this.markItemCompleted} onDeleteItem={this.handleDeleteItem} />
+            <TodoList items={this.state.items} onItemCompleted={this.markItemCompleted} onDeleteItem={this.handleDeleteItem} />
           </div>
         </div>
-
       </div>
       </div>
     );
