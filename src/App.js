@@ -2,31 +2,35 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Modal from 'react-responsive-modal';
 import './App.css';
+// step 1 import TodoList.js
 import TodoList from './component/todolist';
 
 class App extends Component {
+  // step 2 constructor
   constructor(props) {
     super(props);
-
     const data = JSON.parse(localStorage.getItem('Session_todo'));
-    console.log(data)
     if (data) {
       this.state = data;
     } else {
       this.state = {
         items: [],
         text: "",
-        des:"",
-        date:"",
+        des: "",
+        date: "",
+        time: "",
         chkall: false,
         open: false,
-        complete:0
+        complete: 0,
+        Iscompleted: false
       };
     }
 
+    // step 3 function
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleDesChange = this.handleDesChange.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
+    this.handleTimeChange = this.handleTimeChange.bind(this);
     this.handleAddItem = this.handleAddItem.bind(this);
     this.markItemCompleted = this.markItemCompleted.bind(this);
     this.handleDeleteItem = this.handleDeleteItem.bind(this);
@@ -35,6 +39,7 @@ class App extends Component {
     this.UpdateItem = this.UpdateItem.bind(this);
     this.onOpenModal = this.onOpenModal.bind(this);
     this.onCloseModal = this.onCloseModal.bind(this);
+    this.changeViewCompleted = this.changeViewCompleted.bind(this);
   }
 
   onCloseModal() {
@@ -47,21 +52,19 @@ class App extends Component {
 
 
   handleTextChange(event) {
-    this.setState({
-      text: event.target.value
-    });
+    this.setState({ text: event.target.value });
   }
 
   handleDesChange(event) {
-    this.setState({
-      des: event.target.value
-    });
+    this.setState({ des: event.target.value });
   }
 
   handleDateChange(event) {
-    this.setState({
-      date: event.target.value
-    });
+    this.setState({ date: event.target.value });
+  }
+
+  handleTimeChange(event) {
+    this.setState({ time: event.target.value });
   }
 
   handleAddItem(event) {
@@ -69,16 +72,18 @@ class App extends Component {
     var newItem = {
       id: Date.now(),
       text: this.state.text,
-      des:this.state.des,
-      date:this.state.date,
+      des: this.state.des,
+      date: this.state.date,
+      time: this.state.time,
       done: false
     };
     this.setState((prevState) => ({
       items: prevState.items.concat(newItem),
       text: "",
-      des:"",
-      date:"",
-      complete:this.state.complete + 1
+      des: "",
+      date: "",
+      time: "",
+      complete: this.state.complete + 1
     }));
     this.onCloseModal();
   }
@@ -126,10 +131,11 @@ class App extends Component {
     });
   }
 
-  UpdateItem(itemId,itemArray) {
-    this.setState({items: this.state.items.map(item =>item.id === itemId
-       ? Object.assign(itemArray) : item )
-      });
+  UpdateItem(itemId, itemArray) {
+    this.setState({
+      items: this.state.items.map(item => item.id === itemId
+        ? Object.assign(itemArray) : item)
+    });
   }
 
   handleDeleteItem(itemId) {
@@ -147,7 +153,6 @@ class App extends Component {
       alert('No row selected.')
     } else {
       var list_Items = this.state.items.filter(item => item.done === false);
-
       if (list_Items.length !== this.state.items.length) {
         if (window.confirm('Are you sure you want to delete ?')) {
           this.setState({
@@ -158,17 +163,23 @@ class App extends Component {
         alert('No row selected.')
       }
     }
-
   }
-  
+
+  changeViewCompleted() {
+    if (this.state.Iscompleted === true) {
+      this.setState({ Iscompleted: false });
+    } else {
+      this.setState({ Iscompleted: true });
+    }
+  }
+  // step 4 ComponentDidUpdate will update data in Localstorage
   componentDidUpdate() {
-    
     localStorage.setItem('Session_todo', JSON.stringify(this.state));
   }
-
+  // step 5 render
   render() {
     const { open } = this.state;
-    const complete = this.state.items.filter(item =>item.done === true).length;
+    const complete = this.state.items.filter(item => item.done === true).length;
     return (
       <div>
         <header className="App-header" style={{ marginBottom: "20px" }}>
@@ -176,23 +187,26 @@ class App extends Component {
         </header>
         <div className="col-md-8 col-md-offset-2">
           <div className="row">
-            <div className="col-md-offset-2 col-md-3 count_todocomplete"><strong>{complete >= 0 ? complete: 0} Completed</strong></div>
+            <div className="col-md-offset-2 col-md-3 count_todocomplete"><a id="text_todo" onClick={this.changeViewCompleted} title="Click for view completed task">{this.state.Iscompleted === true ? <strong>Back</strong> : <strong>{complete >= 0 ? complete : 0} Completed</strong>}</a></div>
             <div className="col-md-5" align="right">
               <button onClick={this.onOpenModal} className="btn"><i className="fa fa-lg fa-plus"></i></button>
             </div>
           </div>
           <div className="row dataContent">
             <div className="col-md-8 col-md-offset-2">
-              <TodoList items={this.state.items} onItemCompleted={this.markItemCompleted} onUpdateItem={this.UpdateItem} onDeleteItem={this.handleDeleteItem} />
+              {this.state.Iscompleted === true ?
+                <TodoList items={this.state.items.filter(item => item.done === true)} onItemCompleted={this.markItemCompleted} onUpdateItem={this.UpdateItem} onDeleteItem={this.handleDeleteItem} />
+                : <TodoList items={this.state.items} onItemCompleted={this.markItemCompleted} onUpdateItem={this.UpdateItem} onDeleteItem={this.handleDeleteItem} />
+              }
             </div>
           </div>
-          {/* <div className="col-md-offset-2 col-md-2 nopaddingleft-right width_checkall">
-            <input type="checkbox" className="form-check-input" onChange={this.Chackall} checked={this.state.chkall === true} />
+          <div className="col-md-offset-2 col-md-2 nopaddingleft-right width_checkall">
+            <input type="checkbox" className="form-check-input_main" onChange={this.Chackall} checked={this.state.chkall === true} />
             <span className="checkall">Check all</span>
           </div>
           <div className="col-md-1 deletelist" onClick={this.Delete_list}>
             <i className="fa fa-trash-o" aria-hidden="true"> Delete</i>
-          </div> */}
+          </div>
         </div>
         <Modal open={open} onClose={this.onCloseModal}>
           <form className="submit_addtodo" onSubmit={this.handleAddItem}>
@@ -202,15 +216,25 @@ class App extends Component {
             <div className="modal-body">
               <div className="form-group">
                 <label htmlFor="user">Title:</label>
-                <input type="text" className="form-control" onChange={this.handleTextChange} value={this.state.text} placeholder="Please input Title"/>
+                <input type="text" className="form-control" onChange={this.handleTextChange} value={this.state.text} placeholder="Please input Title" />
               </div>
               <div className="form-group">
                 <label htmlFor="des">Description:</label>
                 <textarea className="form-control" onChange={this.handleDesChange} value={this.state.des} placeholder="Please input Description">{this.state.des}</textarea>
               </div>
-              <div className="form-group">
-                <label htmlFor="date">Date:</label>
-                <input type="date" className="form-control" onChange={this.handleDateChange} value={this.state.date}/>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label htmlFor="date">Date:</label>
+                    <input type="date" className="form-control" onChange={this.handleDateChange} value={this.state.date} required />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label htmlFor="date">Time:</label>
+                    <input type="text" className="form-control" onChange={this.handleTimeChange} value={this.state.time} placeholder="00:00" required />
+                  </div>
+                </div>
               </div>
             </div>
             <div className="modal-footer">
