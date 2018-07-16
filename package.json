@@ -3,8 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "moment": "^2.22.2",
+    "node-uuid": "^1.4.8",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-responsive-modal": "^3.1.0",
     "react-scripts": "1.1.4"
   },
   "scripts": {
