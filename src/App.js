@@ -185,7 +185,7 @@ class App extends Component {
         <header className="App-header" style={{ marginBottom: "20px" }}>
           <h3 className="apptitle">MY TO DO LIST</h3>
         </header>
-        <div className="col-md-8 col-md-offset-2">
+        <div className="col-md-8 col-md-offset-2" style={{ marginBottom: "20px" }}>
           <div className="row">
             <div className="col-md-offset-2 col-md-3 count_todocomplete"><a id="text_todo" onClick={this.changeViewCompleted} title="Click for view completed task">{this.state.Iscompleted === true ? <strong>Back</strong> : <strong>{complete >= 0 ? complete : 0} Completed</strong>}</a></div>
             <div className="col-md-5" align="right">
