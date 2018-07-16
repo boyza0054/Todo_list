@@ -7,11 +7,13 @@ class TodoList extends Component {
   // step 2 send obj from props to Class TodoItem
   render() {
     return (
-      <div className="todolist">
-        {this.props.items.map(item => (
-          <TodoItem key={uuid()} id={item.id} text={item.text} des={item.des} date={item.date} time={item.time} completed={item.done} onItemCompleted={this.props.onItemCompleted} onUpdateItem={this.props.onUpdateItem} onDeleteItem={this.props.onDeleteItem} />
-        ))}
-      </div>
+      this.props.items.length === 0 ?
+        <div className="todolist nodata">No data available in completed tasks.</div>
+        : <div className="todolist">
+          {this.props.items.map(item => (
+            <TodoItem key={uuid()} id={item.id} text={item.text} des={item.des} date={item.date} time={item.time} completed={item.done} onItemCompleted={this.props.onItemCompleted} onUpdateItem={this.props.onUpdateItem} onDeleteItem={this.props.onDeleteItem} />
+          ))}
+        </div>
     );
   }
 }
@@ -30,7 +32,7 @@ class TodoItem extends Component {
       id: this.props.id,
       open: false
     };
-  // step 4 function
+    // step 4 function
     this.markCompleted = this.markCompleted.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.handinfo = this.handinfo.bind(this);
@@ -79,9 +81,9 @@ class TodoItem extends Component {
       oldtext: this.state.text,
       des: this.state.des,
       date: this.state.date,
-      time:this.state.time
+      time: this.state.time
     });
-    const Newupdate = { id: this.state.id, text: this.state.text, des: this.state.des, date: this.state.date , time:this.state.time }
+    const Newupdate = { id: this.state.id, text: this.state.text, des: this.state.des, date: this.state.date, time: this.state.time }
     this.props.onUpdateItem(this.props.id, Newupdate);
   }
 
@@ -106,7 +108,7 @@ class TodoItem extends Component {
     const { open } = this.state;
     const today = moment().format("DD/MM/YYYY");
     const duedate = moment(this.state.date).format("DD/MM/YYYY");
-    const time = this.state.time === null ? "00:00":this.state.time;
+    const time = this.state.time === null ? "00:00" : this.state.time;
 
     return (
       <div id="box" className={itemClass} ref={li => this._listItem = li}>
@@ -128,7 +130,7 @@ class TodoItem extends Component {
                 </a>
               </div>
             </form>
-            : <label className="form-check-label"><a onClick={this.handinfo} id="text_todo">{this.state.text}</a> <div className="duedate">{today === duedate ? "Today "+time: duedate}</div></label>}
+            : <label className="form-check-label"><a onClick={this.handinfo} id="text_todo">{this.state.text}</a> <div className="duedate">{today === duedate ? "Today " + time : duedate}</div></label>}
         </div>
         <div className="col-md-1 nopaddingleft-right">
           <button type="button" className="btn btn-success btn-sm" onClick={this.onOpenModal}>

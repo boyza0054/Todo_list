@@ -193,12 +193,15 @@ class App extends Component {
             </div>
           </div>
           <div className="row dataContent">
-            <div className="col-md-8 col-md-offset-2">
-              {this.state.Iscompleted === true ?
-                <TodoList items={this.state.items.filter(item => item.done === true)} onItemCompleted={this.markItemCompleted} onUpdateItem={this.UpdateItem} onDeleteItem={this.handleDeleteItem} />
-                : <TodoList items={this.state.items} onItemCompleted={this.markItemCompleted} onUpdateItem={this.UpdateItem} onDeleteItem={this.handleDeleteItem} />
-              }
-            </div>
+            {this.state.items.length === 0 ?
+              <div className="col-md-8 col-md-offset-2 nodata">No data available in TodoList.</div>
+              : <div className="col-md-8 col-md-offset-2">
+                {this.state.Iscompleted === true ?
+                  <TodoList items={this.state.items.filter(item => item.done === true)} onItemCompleted={this.markItemCompleted} onUpdateItem={this.UpdateItem} onDeleteItem={this.handleDeleteItem} />
+                  : <TodoList items={this.state.items} onItemCompleted={this.markItemCompleted} onUpdateItem={this.UpdateItem} onDeleteItem={this.handleDeleteItem} />
+                }
+              </div>
+            }
           </div>
           <div className="col-md-offset-2 col-md-2 nopaddingleft-right width_checkall">
             <input type="checkbox" className="form-check-input_main" onChange={this.Chackall} checked={this.state.chkall === true} />
