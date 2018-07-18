@@ -35,7 +35,6 @@ class App extends Component {
     this.markItemCompleted = this.markItemCompleted.bind(this);
     this.handleDeleteItem = this.handleDeleteItem.bind(this);
     this.Chackall = this.Chackall.bind(this);
-    this.Delete_list = this.Delete_list.bind(this);
     this.UpdateItem = this.UpdateItem.bind(this);
     this.onOpenModal = this.onOpenModal.bind(this);
     this.onCloseModal = this.onCloseModal.bind(this);
@@ -148,23 +147,6 @@ class App extends Component {
     });
   }
 
-  Delete_list() {
-    if (this.state.items.length === 0) {
-      alert('No row selected.')
-    } else {
-      var list_Items = this.state.items.filter(item => item.done === false);
-      if (list_Items.length !== this.state.items.length) {
-        if (window.confirm('Are you sure you want to delete ?')) {
-          this.setState({
-            items: [].concat(list_Items)
-          });
-        }
-      } else {
-        alert('No row selected.')
-      }
-    }
-  }
-
   changeViewCompleted() {
     if (this.state.Iscompleted === true) {
       this.setState({ Iscompleted: false });
@@ -206,9 +188,6 @@ class App extends Component {
           <div className="col-md-offset-2 col-md-2 nopaddingleft-right width_checkall">
             <input type="checkbox" className="form-check-input_main" onChange={this.Chackall} checked={this.state.chkall === true} />
             <span className="checkall">Check all</span>
-          </div>
-          <div className="col-md-1 deletelist" onClick={this.Delete_list}>
-            <i className="fa fa-trash-o" aria-hidden="true"> Delete</i>
           </div>
         </div>
         <Modal open={open} onClose={this.onCloseModal}>
